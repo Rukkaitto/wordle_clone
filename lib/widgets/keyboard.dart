@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
 import 'package:wordle_clone/keyboards/keyboard.dart';
-import 'package:wordle_clone/widgets/keyboard_button.dart';
+import 'package:wordle_clone/widgets/keyboard_icon_key.dart';
 import 'package:wordle_clone/widgets/keyboard_key.dart';
 import 'package:collection/collection.dart';
 
@@ -42,17 +42,12 @@ class KeyboardWidget extends StatelessWidget {
   Widget buildEnterKey(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(2),
-      child: KeyboardButton(
+      child: KeyboardIconKey(
+        icon: Icons.check_circle_outline_rounded,
+        color: Colors.green,
         onTap: () {
           context.read<GridCubit>().submitAttempt();
         },
-        color: Colors.green,
-        width: 60.0,
-        child: const Icon(
-          Icons.check,
-          color: Colors.white,
-          size: 25.0,
-        ),
       ),
     );
   }
@@ -60,17 +55,12 @@ class KeyboardWidget extends StatelessWidget {
   Widget buildBackspaceKey(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(2),
-      child: KeyboardButton(
+      child: KeyboardIconKey(
+        icon: Icons.backspace_outlined,
+        color: Colors.red,
         onTap: () {
           context.read<GridCubit>().removeLastCharacter();
         },
-        color: Colors.red,
-        width: 60.0,
-        child: const Icon(
-          Icons.backspace,
-          color: Colors.white,
-          size: 25.0,
-        ),
       ),
     );
   }
