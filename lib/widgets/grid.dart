@@ -7,7 +7,7 @@ class Grid extends StatelessWidget {
   final String word;
   final int maxAttempts;
 
-  Grid({
+  const Grid({
     required this.word,
     this.maxAttempts = 6,
     Key? key,

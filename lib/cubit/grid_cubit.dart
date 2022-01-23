@@ -12,13 +12,24 @@ class GridCubit extends Cubit<List<String>> {
     required this.maxAttempts,
   }) : super([]);
 
-  void addAttempt(String attempt) {
-    if (attempt.length == length) {
+  void submitAttempt() {
+    if (state.last.length == length) {
       emit(state + [""]);
     }
   }
 
-  void updateInput(String input) {
+  void removeLastCharacter() {
+    if (state.isEmpty) return;
+
+    final lastWord = state.last;
+    if (lastWord.isEmpty) return;
+
+    emit(state.sublist(0, state.length - 1) +
+        [lastWord.substring(0, lastWord.length - 1)]);
+  }
+
+  void updateInput(String character) {
+    final input = state.isEmpty ? character : (state.last + character);
     // Replace last string in state with input
     if (input.length <= length) {
       if (state.isEmpty) {

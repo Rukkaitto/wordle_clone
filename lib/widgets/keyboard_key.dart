@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_clone/cubit/grid_cubit.dart';
+import 'package:wordle_clone/widgets/keyboard_button.dart';
 
 class KeyboardKey extends StatelessWidget {
   final String character;
+  final Color color;
 
   const KeyboardKey({
     required this.character,
+    this.color = Colors.grey,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 35.0,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      padding: const EdgeInsets.all(5.0),
-      child: Center(
-        child: Text(
-          character.toUpperCase(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-          ),
+    return KeyboardButton(
+      onTap: () {
+        context.read<GridCubit>().updateInput(character);
+      },
+      child: Text(
+        character.toUpperCase(),
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 30.0,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
