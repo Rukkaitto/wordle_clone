@@ -93,11 +93,11 @@ class GridState {
     if (lockedAttempts.isEmpty) return state;
 
     // Iterating over locked attempts
-    for (var attempt in lockedAttempts.reversed) {
+    for (var attempt in lockedAttempts) {
       // Iterating over the letters of the attempt
       for (var cell in attempt) {
         final attemptLetter = cell.character;
-        if (attemptLetter == letter) {
+        if (attemptLetter == letter && state != CellState.correct) {
           state = cell.state;
         }
       }
