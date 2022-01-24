@@ -23,24 +23,23 @@ class Grid extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(8.0),
-      child: BlocBuilder<GridCubit, GridState>(
-        builder: (context, state) {
-          return GridView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: word.length * maxAttempts,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: word.length,
-              mainAxisSpacing: 8.0,
-              crossAxisSpacing: 8.0,
-            ),
-            itemBuilder: (context, index) {
-              int x = index % word.length;
-              int y = index ~/ word.length;
+      child: GridView.builder(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        itemCount: word.length * maxAttempts,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: word.length,
+          mainAxisSpacing: 8.0,
+          crossAxisSpacing: 8.0,
+        ),
+        itemBuilder: (context, index) {
+          int x = index % word.length;
+          int y = index ~/ word.length;
+          return BlocBuilder<GridCubit, GridState>(
+            builder: (context, state) {
               try {
-                final cell = state.cells[y][x];
                 return CellWidget(
-                  cell: cell,
+                  cell: state.cells[y][x],
                 );
               } catch (e) {
                 return CellWidget(
