@@ -22,7 +22,7 @@ class Game extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => GridCubit(
-            length: word.length,
+            word: word,
             maxAttempts: attempts,
           ),
         ),

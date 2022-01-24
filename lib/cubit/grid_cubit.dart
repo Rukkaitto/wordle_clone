@@ -1,39 +1,103 @@
 import 'package:bloc/bloc.dart';
+import 'package:wordle_clone/widgets/cell.dart';
 
-class GridCubit extends Cubit<List<String>> {
-  final int length;
+class GridCubit extends Cubit<GridState> {
+  final String word;
   final int maxAttempts;
 
   GridCubit({
-    required this.length,
+    required this.word,
     required this.maxAttempts,
-  }) : super([]);
+  }) : super(GridState());
 
   void submitAttempt() {
-    if (state.last.length == length) {
-      emit(state + [""]);
+    if (state.attempts.isEmpty) return;
+    final attempt = state.attempts.last;
+
+    if (attempt.length == word.length) {
+      final newStates = List<CellState>.filled(word.length, CellState.empty);
+
+      for (int i = 0; i < attempt.length; i++) {
+        final letter = attempt[i];
+        newStates[i] = CellState.absent;
+        if (word.contains(letter)) {
+          newStates[i] = CellState.wrong;
+        }
+        if (word[i] == letter) {
+          newStates[i] = CellState.correct;
+        }
+      }
+      emit(GridState(
+        attempts: state.attempts + [""],
+        cellStates: state.cellStates + [newStates],
+      ));
     }
   }
 
   void removeLastCharacter() {
-    if (state.isEmpty) return;
+    if (state.attempts.isEmpty) return;
 
-    final lastWord = state.last;
-    if (lastWord.isEmpty) return;
+    final lastAttempt = state.attempts.last;
+    if (lastAttempt.isEmpty) return;
 
-    emit(state.sublist(0, state.length - 1) +
-        [lastWord.substring(0, lastWord.length - 1)]);
+    final newAttempts = state.attempts.sublist(0, state.attempts.length - 1) +
+        [lastAttempt.substring(0, lastAttempt.length - 1)];
+    emit(GridState(
+      attempts: newAttempts,
+      cellStates: state.cellStates,
+    ));
   }
 
   void updateInput(String character) {
-    final input = state.isEmpty ? character : (state.last + character);
+    final input =
+        state.attempts.isEmpty ? character : (state.attempts.last + character);
     // Replace last string in state with input
-    if (input.length <= length) {
-      if (state.isEmpty) {
-        emit(state + [input]);
+    if (input.length <= word.length) {
+      if (state.attempts.isEmpty) {
+        emit(
+          GridState(
+            attempts: state.attempts + [input],
+            cellStates: state.cellStates,
+          ),
+        );
       } else {
-        emit(state.sublist(0, state.length - 1) + [input]);
+        emit(
+          GridState(
+            attempts:
+                state.attempts.sublist(0, state.attempts.length - 1) + [input],
+            cellStates: state.cellStates,
+          ),
+        );
       }
     }
+  }
+}
+
+class GridState {
+  final List<String> attempts;
+  final List<List<CellState>> cellStates;
+
+  GridState({
+    this.attempts = const [],
+    this.cellStates = const [],
+  });
+
+  CellState getMostRecentStateFromLetter(String letter) {
+    var state = CellState.empty;
+    if (attempts.isEmpty) return state;
+    final lockedAttempts = attempts.sublist(0, attempts.length - 1);
+    if (lockedAttempts.isEmpty) return state;
+
+    for (int i = 0; i < lockedAttempts.length; i++) {
+      final attempt = attempts[i];
+      final statesRow = cellStates[i];
+      for (int j = 0; j < attempt.length; j++) {
+        final attemptLetter = attempt[j];
+        if (attemptLetter == letter) {
+          state = statesRow[j];
+        }
+      }
+    }
+    return state;
   }
 }

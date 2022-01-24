@@ -21,8 +21,8 @@ class Grid extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(8.0),
-      child: BlocBuilder<GridCubit, List<String>>(
-        builder: (context, attempts) {
+      child: BlocBuilder<GridCubit, GridState>(
+        builder: (context, state) {
           return GridView.builder(
             padding: EdgeInsets.zero,
             shrinkWrap: true,
@@ -33,15 +33,21 @@ class Grid extends StatelessWidget {
               crossAxisSpacing: 8.0,
             ),
             itemBuilder: (context, index) {
-              final letters = attempts
+              final letters = state.attempts
                   .map(
                     (attempt) => attempt.split(""),
                   )
                   .expand((letters) => letters)
                   .toList();
+
+              final cellStates =
+                  state.cellStates.expand((cellState) => cellState).toList();
+
               return Cell(
                 character: letters.length > index ? letters[index] : "",
-                state: CellState.empty,
+                state: cellStates.length > index
+                    ? cellStates[index]
+                    : CellState.empty,
               );
             },
           );
