@@ -20,7 +20,9 @@ class KeyboardButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
         width: width,
         height: height,
         decoration: BoxDecoration(

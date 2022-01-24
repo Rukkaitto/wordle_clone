@@ -12,7 +12,10 @@ class CellState extends Equatable {
   final Color color;
   final CellStateType type;
 
-  const CellState({required this.color, required this.type});
+  const CellState({
+    required this.color,
+    this.type = CellStateType.empty,
+  });
 
   static get correct => const CellState(
         color: Colors.green,

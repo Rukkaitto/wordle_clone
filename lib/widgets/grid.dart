@@ -44,10 +44,7 @@ class Grid extends StatelessWidget {
                 );
               } catch (e) {
                 return CellWidget(
-                  cell: Cell(
-                    character: '',
-                    state: CellState.empty,
-                  ),
+                  cell: Cell(state: CellState.empty),
                 );
               }
             },

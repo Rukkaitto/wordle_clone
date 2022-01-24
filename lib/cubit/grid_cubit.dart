@@ -11,18 +11,16 @@ class GridCubit extends Cubit<GridState> {
     required this.word,
     required this.maxAttempts,
   }) : super(
-          GridState(
-            cells: [],
-          ),
+          GridState(),
         );
 
-  void submitAttempt() {
+  void submitAttempt() async {
     List<Cell> lastRow = _getLastRow(state.cells);
 
     // Checks if the attempt's length is equal to the word's length
     if (lastRow.length == word.length) {
       for (int i = 0; i < lastRow.length; i++) {
-        final letter = lastRow[i].character;
+        final letter = lastRow[i].character!;
 
         // Mark the current state as absent for now
         lastRow[i] = Cell(character: letter, state: CellState.absent);
@@ -35,10 +33,15 @@ class GridCubit extends Cubit<GridState> {
         if (word[i] == letter) {
           lastRow[i] = Cell(character: letter, state: CellState.correct);
         }
+
+        // Emit the new state
+        emit(GridState(
+          cells: state.cells.withoutLast + [lastRow],
+        ));
+        await Future.delayed(const Duration(milliseconds: 300));
       }
-      // Emit the new state
       emit(GridState(
-        cells: state.cells.withoutLast + [lastRow, []],
+        cells: state.cells + [[]],
       ));
     }
   }
@@ -80,7 +83,7 @@ class GridCubit extends Cubit<GridState> {
 class GridState {
   final List<List<Cell>> cells;
 
-  GridState({required this.cells});
+  GridState({this.cells = const []});
 
   CellState getMostRecentStateFromLetter(String letter) {
     var state = CellState.empty;

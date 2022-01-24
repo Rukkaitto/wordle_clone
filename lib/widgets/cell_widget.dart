@@ -11,7 +11,9 @@ class CellWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: cell.state.color,
         borderRadius: const BorderRadius.all(
@@ -20,7 +22,7 @@ class CellWidget extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          cell.character.toUpperCase(),
+          cell.character?.toUpperCase() ?? '',
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,
