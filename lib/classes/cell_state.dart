@@ -22,8 +22,8 @@ class CellState extends Equatable {
         type: CellStateType.correct,
       );
 
-  static get wrong => const CellState(
-        color: Colors.yellow,
+  static get wrong => CellState(
+        color: Colors.yellow.shade700,
         type: CellStateType.wrong,
       );
 
