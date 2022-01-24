@@ -22,6 +22,7 @@ class KeyboardWidget extends StatelessWidget {
         (index, row) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: buildKeyboard(context, index, row),
           );
         },
@@ -68,7 +69,10 @@ class KeyboardWidget extends StatelessWidget {
   Widget buildLetterKey(String e) {
     return Padding(
       padding: const EdgeInsets.all(2),
-      child: KeyboardKey(character: e),
+      child: KeyboardKey(
+        character: e,
+        color: Colors.grey.shade700,
+      ),
     );
   }
 }

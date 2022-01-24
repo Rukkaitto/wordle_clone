@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
 import 'package:wordle_clone/widgets/keyboard_button.dart';
 
@@ -17,8 +18,9 @@ class KeyboardKey extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GridCubit, GridState>(
       builder: (context, state) {
+        final cellState = state.getMostRecentStateFromLetter(character);
         return KeyboardButton(
-          color: state.getMostRecentStateFromLetter(character).color,
+          color: cellState == CellState.empty ? color : cellState.color,
           onTap: () {
             context.read<GridCubit>().updateInput(character);
           },
