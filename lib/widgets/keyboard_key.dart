@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
+import 'package:wordle_clone/cubit/letters_cubit.dart';
 import 'package:wordle_clone/widgets/keyboard_button.dart';
 
 class KeyboardKey extends StatelessWidget {
@@ -15,19 +16,24 @@ class KeyboardKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardButton(
-      onTap: () {
-        context.read<GridCubit>().updateInput(character);
+    return BlocBuilder<LettersCubit, LettersState>(
+      builder: (context, letters) {
+        return KeyboardButton(
+          color: letters.getColorFromLetters(character),
+          onTap: () {
+            context.read<GridCubit>().updateInput(character);
+          },
+          child: Text(
+            character.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 30.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
       },
-      child: Text(
-        character.toUpperCase(),
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 30.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
     );
   }
 }

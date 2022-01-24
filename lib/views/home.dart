@@ -8,7 +8,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: SafeArea(
-        child: Game(word: 'word'),
+        child: Game(word: 'world'),
       ),
     );
   }

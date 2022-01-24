@@ -1,7 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-
-part 'grid_state.dart';
 
 class GridCubit extends Cubit<List<String>> {
   final int length;
