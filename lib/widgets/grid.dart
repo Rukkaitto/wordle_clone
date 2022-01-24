@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
 import 'package:wordle_clone/widgets/cell.dart';
 

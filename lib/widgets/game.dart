@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_clone/classes/keyboard.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
-import 'package:wordle_clone/cubit/letters_cubit.dart';
-import 'package:wordle_clone/keyboards/keyboard.dart';
 import 'package:wordle_clone/widgets/grid.dart';
-import 'package:wordle_clone/widgets/keyboard.dart';
+import 'package:wordle_clone/widgets/keyboard_widget.dart';
 
 class Game extends StatelessWidget {
   final String word;
@@ -18,18 +17,11 @@ class Game extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => GridCubit(
-            word: word,
-            maxAttempts: attempts,
-          ),
-        ),
-        BlocProvider(
-          create: (context) => LettersCubit(),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => GridCubit(
+        word: word,
+        maxAttempts: attempts,
+      ),
       child: Builder(
         builder: (context) {
           return Column(
@@ -38,7 +30,13 @@ class Game extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Grid(word: word),
               ),
+              const Spacer(),
               KeyboardWidget(keyboard: Keyboard.azerty),
+              const Flexible(
+                child: SizedBox(
+                  height: 100.0,
+                ),
+              ),
             ],
           );
         },

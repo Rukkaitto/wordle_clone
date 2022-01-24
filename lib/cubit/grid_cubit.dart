@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:wordle_clone/widgets/cell.dart';
+import 'package:wordle_clone/classes/cell_state.dart';
 
 class GridCubit extends Cubit<GridState> {
   final String word;

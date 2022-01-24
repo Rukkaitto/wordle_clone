@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-
-enum CellState {
-  correct,
-  wrong,
-  absent,
-  empty,
-}
+import 'package:wordle_clone/classes/cell_state.dart';
 
 class Cell extends StatelessWidget {
   final String character;
@@ -21,7 +15,7 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: getColorFromState(state),
+        color: state.color,
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
@@ -38,18 +32,5 @@ class Cell extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color getColorFromState(CellState state) {
-    switch (state) {
-      case CellState.correct:
-        return Colors.green;
-      case CellState.wrong:
-        return Colors.yellow;
-      case CellState.absent:
-        return Colors.black;
-      case CellState.empty:
-        return Colors.grey.shade800;
-    }
   }
 }

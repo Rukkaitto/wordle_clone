@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
-import 'package:wordle_clone/keyboards/keyboard.dart';
+import 'package:wordle_clone/classes/keyboard.dart';
 import 'package:wordle_clone/widgets/keyboard_icon_key.dart';
 import 'package:wordle_clone/widgets/keyboard_key.dart';
 import 'package:collection/collection.dart';
