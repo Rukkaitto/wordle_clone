@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
-import 'package:wordle_clone/widgets/cell.dart';
+import 'package:wordle_clone/widgets/cell_widget.dart';
 
 class Grid extends StatelessWidget {
   final String word;
@@ -34,22 +35,21 @@ class Grid extends StatelessWidget {
               crossAxisSpacing: 8.0,
             ),
             itemBuilder: (context, index) {
-              final letters = state.attempts
-                  .map(
-                    (attempt) => attempt.split(""),
-                  )
-                  .expand((letters) => letters)
-                  .toList();
-
-              final cellStates =
-                  state.cellStates.expand((cellState) => cellState).toList();
-
-              return Cell(
-                character: letters.length > index ? letters[index] : "",
-                state: cellStates.length > index
-                    ? cellStates[index]
-                    : CellState.empty,
-              );
+              int x = index % word.length;
+              int y = index ~/ word.length;
+              try {
+                final cell = state.cells[y][x];
+                return CellWidget(
+                  cell: cell,
+                );
+              } catch (e) {
+                return CellWidget(
+                  cell: Cell(
+                    character: '',
+                    state: CellState.empty,
+                  ),
+                );
+              }
             },
           );
         },

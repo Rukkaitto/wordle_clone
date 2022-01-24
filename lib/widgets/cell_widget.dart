@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:wordle_clone/classes/cell_state.dart';
+import 'package:wordle_clone/classes/cell.dart';
 
-class Cell extends StatelessWidget {
-  final String character;
-  final CellState state;
+class CellWidget extends StatelessWidget {
+  final Cell cell;
 
-  const Cell({
-    required this.character,
-    required this.state,
+  const CellWidget({
+    required this.cell,
     Key? key,
   }) : super(key: key);
 
@@ -15,14 +13,14 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: state.color,
+        color: cell.state.color,
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
       ),
       child: Center(
         child: Text(
-          character.toUpperCase(),
+          cell.character.toUpperCase(),
           textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.white,

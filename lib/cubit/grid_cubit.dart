@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
+import 'package:wordle_clone/extensions/list_extension.dart';
 
 class GridCubit extends Cubit<GridState> {
   final String word;
@@ -8,96 +10,96 @@ class GridCubit extends Cubit<GridState> {
   GridCubit({
     required this.word,
     required this.maxAttempts,
-  }) : super(GridState());
+  }) : super(
+          GridState(
+            cells: [],
+          ),
+        );
 
   void submitAttempt() {
-    if (state.attempts.isEmpty) return;
-    final attempt = state.attempts.last;
+    List<Cell> lastRow = _getLastRow(state.cells);
 
-    if (attempt.length == word.length) {
-      final newStates = List<CellState>.filled(word.length, CellState.empty);
+    // Checks if the attempt's length is equal to the word's length
+    if (lastRow.length == word.length) {
+      for (int i = 0; i < lastRow.length; i++) {
+        final letter = lastRow[i].character;
 
-      for (int i = 0; i < attempt.length; i++) {
-        final letter = attempt[i];
-        newStates[i] = CellState.absent;
+        // Mark the current state as absent for now
+        lastRow[i] = Cell(character: letter, state: CellState.absent);
+        // If the letter is in the word, mark the current state as wrong for now
         if (word.contains(letter)) {
-          newStates[i] = CellState.wrong;
+          lastRow[i] = Cell(character: letter, state: CellState.wrong);
         }
+        // If the letter is in the same position as the current letter in the word,
+        // mark the current state as correct
         if (word[i] == letter) {
-          newStates[i] = CellState.correct;
+          lastRow[i] = Cell(character: letter, state: CellState.correct);
         }
       }
+      // Emit the new state
       emit(GridState(
-        attempts: state.attempts + [""],
-        cellStates: state.cellStates + [newStates],
+        cells: state.cells.withoutLast + [lastRow, []],
       ));
     }
   }
 
   void removeLastCharacter() {
-    if (state.attempts.isEmpty) return;
+    List<Cell> lastRow = _getLastRow(state.cells);
 
-    final lastAttempt = state.attempts.last;
-    if (lastAttempt.isEmpty) return;
+    if (lastRow.isEmpty) return;
 
-    final newAttempts = state.attempts.sublist(0, state.attempts.length - 1) +
-        [lastAttempt.substring(0, lastAttempt.length - 1)];
+    final newRow = lastRow.withoutLast;
+
     emit(GridState(
-      attempts: newAttempts,
-      cellStates: state.cellStates,
+      cells: state.cells.withoutLast + [newRow],
     ));
   }
 
   void updateInput(String character) {
-    final input =
-        state.attempts.isEmpty ? character : (state.attempts.last + character);
-    // Replace last string in state with input
-    if (input.length <= word.length) {
-      if (state.attempts.isEmpty) {
-        emit(
-          GridState(
-            attempts: state.attempts + [input],
-            cellStates: state.cellStates,
-          ),
-        );
+    List<Cell> lastRow = _getLastRow(state.cells);
+
+    if (lastRow.length <= word.length) {
+      lastRow += [Cell(character: character, state: CellState.empty)];
+      if (state.cells.isEmpty) {
+        emit(GridState(
+          cells: [lastRow],
+        ));
       } else {
-        emit(
-          GridState(
-            attempts:
-                state.attempts.sublist(0, state.attempts.length - 1) + [input],
-            cellStates: state.cellStates,
-          ),
-        );
+        emit(GridState(
+          cells: state.cells.withoutLast + [lastRow],
+        ));
       }
     }
+  }
+
+  List<T> _getLastRow<T>(List<List<T>> list) {
+    return list.isEmpty ? [] : List.from(list.last);
   }
 }
 
 class GridState {
-  final List<String> attempts;
-  final List<List<CellState>> cellStates;
+  final List<List<Cell>> cells;
 
-  GridState({
-    this.attempts = const [],
-    this.cellStates = const [],
-  });
+  GridState({required this.cells});
 
   CellState getMostRecentStateFromLetter(String letter) {
     var state = CellState.empty;
-    if (attempts.isEmpty) return state;
-    final lockedAttempts = attempts.sublist(0, attempts.length - 1);
+    if (cells.isEmpty) return state;
+    // The locked attempts are the attempts that have already been submitted
+    final lockedAttempts = cells.withoutLast;
     if (lockedAttempts.isEmpty) return state;
 
-    for (int i = 0; i < lockedAttempts.length; i++) {
-      final attempt = attempts[i];
-      final statesRow = cellStates[i];
-      for (int j = 0; j < attempt.length; j++) {
-        final attemptLetter = attempt[j];
+    // Iterating over locked attempts
+    for (var attempt in lockedAttempts.reversed) {
+      // Iterating over the letters of the attempt
+      for (var cell in attempt) {
+        final attemptLetter = cell.character;
         if (attemptLetter == letter) {
-          state = statesRow[j];
+          state = cell.state;
         }
       }
     }
+
     return state;
   }
 }
