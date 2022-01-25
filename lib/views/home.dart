@@ -10,7 +10,11 @@ class Home extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder<String>(
-          future: WordUtils.getRandomWord(context),
+          future: WordUtils.getRandomWord(
+            context,
+            min: 4,
+            max: 6,
+          ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Game(word: snapshot.data!);
