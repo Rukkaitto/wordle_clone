@@ -6,7 +6,7 @@ on:
 jobs:
   decode:
     name: Decode secrets
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: Decoding keyprop
         run: echo "${{ secrets.KEYPROP }}" | base64 --decode > key.properties
@@ -28,7 +28,7 @@ jobs:
 
   build-appbundle:
     name: Build Appbundle
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     needs: [decode]
     steps:
       - name: Checkout Project
@@ -70,7 +70,7 @@ jobs:
 
   publish-playstore:
     name: Publish to Google Play Store
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: [build-appbundle]
     steps:
       - name: Get appbundle from artifacts
@@ -91,7 +91,7 @@ jobs:
 
   clean:
     name: Clean up
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: [build-appbundle]
     steps:
       - name: Delete artifacts
