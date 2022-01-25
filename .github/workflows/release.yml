@@ -1,0 +1,102 @@
+name: Production Release
+on:
+  push:
+    tags:
+      - v*.*.*
+jobs:
+  decode:
+    name: Decode secrets
+    runs-on: ubuntu
+    steps:
+      - name: Decoding keyprop
+        run: echo "${{ secrets.KEYPROP }}" | base64 --decode > key.properties
+
+      - name: Decoding keystore
+        run: echo "${{ secrets.KEYJKS }}" | base64 --decode > upload-keystore.jks
+
+      - name: Upload keyprop
+        uses: actions/upload-artifact@v2
+        with:
+          name: keyprop
+          path: key.properties
+
+      - name: Upload keystore
+        uses: actions/upload-artifact@v2
+        with:
+          name: keystore
+          path: upload-keystore.jks
+
+  build-appbundle:
+    name: Build Appbundle
+    runs-on: ubuntu
+    needs: [decode]
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v1
+
+      - name: Get keyprop from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: keyprop
+          path: android
+
+      - name: Get keystore from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: keystore
+          path: android/app
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+
+      - name: Pub Get Packages
+        run: flutter pub get
+
+      - name: Build Android Appbundle
+        run: flutter build appbundle
+
+      - name: Upload app bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+
+  publish-playstore:
+    name: Publish to Google Play Store
+    runs-on: self-hosted
+    needs: [build-appbundle, changelog]
+    steps:
+      - name: Get appbundle from artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: appbundle
+
+      - name: Release on the Play Store
+        uses: swootte/upload-google-play@V1.1.5
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.lucasgoudin.wordle_clone
+          inAppUpdatePriority: 5
+          releaseFiles: app-release.aab
+          track: internal
+          status: draft
+          changesNotSentForReview: true
+
+  clean:
+    name: Clean up
+    runs-on: self-hosted
+    needs: [build-appbundle]
+    steps:
+      - name: Delete artifacts
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: |
+            keyprop
+            keystore
