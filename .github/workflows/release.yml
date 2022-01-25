@@ -71,7 +71,7 @@ jobs:
   publish-playstore:
     name: Publish to Google Play Store
     runs-on: self-hosted
-    needs: [build-appbundle, changelog]
+    needs: [build-appbundle]
     steps:
       - name: Get appbundle from artifacts
         uses: actions/download-artifact@v2
