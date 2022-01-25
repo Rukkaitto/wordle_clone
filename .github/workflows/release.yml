@@ -87,7 +87,6 @@ jobs:
           releaseFiles: app-release.aab
           track: internal
           status: draft
-          changesNotSentForReview: true
 
   clean:
     name: Clean up
