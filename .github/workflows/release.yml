@@ -86,7 +86,6 @@ jobs:
           inAppUpdatePriority: 5
           releaseFiles: app-release.aab
           track: internal
-          status: draft
 
   clean:
     name: Clean up
