@@ -12,8 +12,8 @@ class Home extends StatelessWidget {
         child: FutureBuilder<String>(
           future: WordUtils.getRandomWord(
             context,
-            min: 4,
-            max: 6,
+            min: 5,
+            max: 5,
           ),
           builder: (context, snapshot) {
             if (snapshot.hasData) {

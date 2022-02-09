@@ -15,6 +15,8 @@ class GridCubit extends Cubit<GridState> {
   /// Emits a new [GridState] with evaluated cell states for the last row
   /// if the last row is complete.
   void submitAttempt() async {
+    if (state.isWon || state.isLost) return;
+
     List<Cell> lastRow = _getLastRow(state.cells);
 
     // Checks if the attempt's length is equal to the word's length
@@ -42,20 +44,45 @@ class GridCubit extends Cubit<GridState> {
         // Emit the state with the evaluated row
         emit(GridState(
           cells: state.cells.withoutLast + [lastRow],
+          isLost: state.isLost,
+          isWon: state.isWon,
         ));
         // Add a delay to reveal the next letter
         await Future.delayed(const Duration(milliseconds: 300));
       }
-      // When the cell states are evaluated,
-      // add a new row to the grid
-      emit(GridState(
-        cells: state.cells + [[]],
-      ));
+
+      // If all the last row's cells are correct, emit a new state with isWon set to true
+      if (lastRow.every((cell) => cell.state == CellState.correct)) {
+        emit(GridState(
+          cells: state.cells,
+          isWon: true,
+          isLost: state.isLost,
+        ));
+      } else {
+        // If the current row is the last row, emit a new state with isLost set to true
+        if (state.cells.length == maxAttempts) {
+          emit(GridState(
+            cells: state.cells,
+            isLost: true,
+            isWon: state.isWon,
+          ));
+        } else {
+          // When the cell states are evaluated,
+          // add a new row to the grid
+          emit(GridState(
+            cells: state.cells + [[]],
+            isLost: state.isLost,
+            isWon: state.isWon,
+          ));
+        }
+      }
     }
   }
 
   /// Emits a new [GridState] with the last column of the last row removed.
   void removeLastCharacter() {
+    if (state.isWon || state.isLost) return;
+
     List<Cell> lastRow = _getLastRow(state.cells);
 
     if (lastRow.isEmpty) return;
@@ -70,6 +97,7 @@ class GridCubit extends Cubit<GridState> {
   /// Emits a new [GridState] with a given [character] added to the last row,
   /// if the last row is not full.
   void updateInput(String character) {
+    if (state.isWon || state.isLost) return;
     assert(character.length == 1);
 
     List<Cell> lastRow = _getLastRow(state.cells);
@@ -83,11 +111,15 @@ class GridCubit extends Cubit<GridState> {
         // If this is the first row, just add the row to the grid
         emit(GridState(
           cells: [lastRow],
+          isLost: state.isLost,
+          isWon: state.isWon,
         ));
       } else {
         // If this is not the first row, replace the last row with the new one
         emit(GridState(
           cells: state.cells.withoutLast + [lastRow],
+          isLost: state.isLost,
+          isWon: state.isWon,
         ));
       }
     }
@@ -101,8 +133,10 @@ class GridCubit extends Cubit<GridState> {
 
 class GridState {
   final List<List<Cell>> cells;
+  final bool isWon;
+  final bool isLost;
 
-  GridState({this.cells = const []});
+  GridState({this.isWon = false, this.isLost = false, this.cells = const []});
 
   /// Gets the most recent [CellState] from a given [character].
   CellState getMostRecentStateFromLetter(String character) {

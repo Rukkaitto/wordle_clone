@@ -15,6 +15,23 @@ class Grid extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  List<Widget> buildCells(List<List<Cell>> cells) {
+    return List.generate(word.length * maxAttempts, (index) {
+      int x = index % word.length;
+      int y = index ~/ word.length;
+
+      try {
+        return CellWidget(
+          cell: cells[y][x],
+        );
+      } catch (e) {
+        return CellWidget(
+          cell: Cell(state: CellState.empty),
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,30 +40,33 @@ class Grid extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(8.0),
-      child: GridView.builder(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        itemCount: word.length * maxAttempts,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: word.length,
-          mainAxisSpacing: 8.0,
-          crossAxisSpacing: 8.0,
-        ),
-        itemBuilder: (context, index) {
-          int x = index % word.length;
-          int y = index ~/ word.length;
-          return BlocBuilder<GridCubit, GridState>(
-            builder: (context, state) {
-              try {
-                return CellWidget(
-                  cell: state.cells[y][x],
-                );
-              } catch (e) {
-                return CellWidget(
-                  cell: Cell(state: CellState.empty),
-                );
-              }
-            },
+      child: BlocConsumer<GridCubit, GridState>(
+        listener: (context, state) {
+          if (state.isWon) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('You won!'),
+              ),
+            );
+          }
+          if (state.isLost) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('You lost...'),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          return GridView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: word.length,
+              mainAxisSpacing: 8.0,
+              crossAxisSpacing: 8.0,
+            ),
+            children: buildCells(state.cells),
           );
         },
       ),
