@@ -77,7 +77,7 @@ class Grid extends StatelessWidget {
       AwesomeDialog(
         context: context,
         dialogType: DialogType.ERROR,
-        title: 'You lost...',
+        title: 'You lost... (the word was: ${word.toUpperCase()})',
         btnOkText: 'Play again',
         btnOkOnPress: () {
           Navigator.of(context).pushReplacementNamed('/');
