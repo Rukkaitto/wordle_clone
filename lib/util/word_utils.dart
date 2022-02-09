@@ -1,26 +1,51 @@
-import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/services.dart';
 
-import 'package:flutter/material.dart';
+enum Language {
+  en,
+}
 
 class WordUtils {
-  /// Fetches a list of the 1000 most common nouns in English.
-  static Future<List<String>> getWords(BuildContext context) async {
-    String data = await DefaultAssetBundle.of(context)
-        .loadString("assets/words/english.json");
-    final result = List<String>.from(json.decode(data));
+  /// Checks if a word exists in the given language
+  static Future<bool> wordExists(String word, Language language) async {
+    final words = await getWords(language);
+    return words.contains(word);
+  }
+
+  /// Fetches a list of all words in the given language.
+  static Future<List<String>> getWords(
+    Language language,
+  ) async {
+    return _getWordsFromFile("words_${language.name}.txt");
+  }
+
+  /// Fetches a list of the most common words in the given language.
+  static Future<List<String>> getCommonWords(
+    Language language,
+  ) async {
+    return _getWordsFromFile("common_nouns_${language.name}.txt");
+  }
+
+  static Future<List<String>> _getWordsFromFile(
+    String fileName,
+  ) async {
+    String data = await rootBundle.loadString("assets/words/$fileName");
+    final result = data.split("\n");
     return result;
   }
 
   /// Fetches a random word from the list of 1000 most common nouns in English,
   /// with its length being between [min] and [max].
-  static Future<String> getRandomWord(BuildContext context,
-      {required int min, required int max}) async {
-    List<String> words = await getWords(context);
+  static Future<String> getRandomWord({
+    required Language language,
+    required int min,
+    required int max,
+  }) async {
+    List<String> words = await getCommonWords(language);
     int index = Random().nextInt(words.length);
     String word = words[index];
     if (word.length < min || word.length > max) {
-      return getRandomWord(context, min: min, max: max);
+      return getRandomWord(min: min, max: max, language: language);
     }
     return word;
   }

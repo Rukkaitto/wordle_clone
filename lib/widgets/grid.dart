@@ -48,7 +48,7 @@ class Grid extends StatelessWidget {
     });
   }
 
-  Widget gridBuilder(context, state) {
+  Widget gridBuilder(BuildContext context, GridState state) {
     return GridView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
@@ -61,7 +61,7 @@ class Grid extends StatelessWidget {
     );
   }
 
-  void gridListener(context, state) {
+  void gridListener(BuildContext context, GridState state) {
     if (state.isWon) {
       AwesomeDialog(
         context: context,
@@ -83,6 +83,13 @@ class Grid extends StatelessWidget {
           Navigator.of(context).pushReplacementNamed('/');
         },
       ).show();
+    }
+    if (state.wordDoesntExist) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("That word doesn't exist..."),
+        ),
+      );
     }
   }
 }

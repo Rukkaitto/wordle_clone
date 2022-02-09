@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/extensions/list_extension.dart';
+import 'package:wordle_clone/util/word_utils.dart';
 
 class GridCubit extends Cubit<GridState> {
   final String word;
@@ -18,6 +19,15 @@ class GridCubit extends Cubit<GridState> {
     if (state.isWon || state.isLost) return;
 
     List<Cell> lastRow = _getLastRow(state.cells);
+
+    final solution = lastRow.map((e) => e.character).join();
+
+    if (!await WordUtils.wordExists(solution, Language.en)) {
+      emit(state.copyWith(wordDoesntExist: true));
+      return;
+    } else {
+      emit(state.copyWith(wordDoesntExist: false));
+    }
 
     // Checks if the attempt's length is equal to the word's length
     if (lastRow.length == word.length) {
@@ -42,38 +52,23 @@ class GridCubit extends Cubit<GridState> {
         }
 
         // Emit the state with the evaluated row
-        emit(GridState(
-          cells: state.cells.withoutLast + [lastRow],
-          isLost: state.isLost,
-          isWon: state.isWon,
-        ));
+        emit(state.copyWith(cells: state.cells.withoutLast + [lastRow]));
+
         // Add a delay to reveal the next letter
         await Future.delayed(const Duration(milliseconds: 300));
       }
 
       // If all the last row's cells are correct, emit a new state with isWon set to true
       if (lastRow.every((cell) => cell.state == CellState.correct)) {
-        emit(GridState(
-          cells: state.cells,
-          isWon: true,
-          isLost: state.isLost,
-        ));
+        emit(state.copyWith(isWon: true));
       } else {
         // If the current row is the last row, emit a new state with isLost set to true
         if (state.cells.length == maxAttempts) {
-          emit(GridState(
-            cells: state.cells,
-            isLost: true,
-            isWon: state.isWon,
-          ));
+          emit(state.copyWith(isLost: true));
         } else {
           // When the cell states are evaluated,
           // add a new row to the grid
-          emit(GridState(
-            cells: state.cells + [[]],
-            isLost: state.isLost,
-            isWon: state.isWon,
-          ));
+          emit(state.copyWith(cells: state.cells + [[]]));
         }
       }
     }
@@ -89,9 +84,7 @@ class GridCubit extends Cubit<GridState> {
 
     final newRow = lastRow.withoutLast;
 
-    emit(GridState(
-      cells: state.cells.withoutLast + [newRow],
-    ));
+    emit(state.copyWith(cells: state.cells.withoutLast + [newRow]));
   }
 
   /// Emits a new [GridState] with a given [character] added to the last row,
@@ -109,18 +102,10 @@ class GridCubit extends Cubit<GridState> {
 
       if (state.cells.isEmpty) {
         // If this is the first row, just add the row to the grid
-        emit(GridState(
-          cells: [lastRow],
-          isLost: state.isLost,
-          isWon: state.isWon,
-        ));
+        emit(state.copyWith(cells: [lastRow]));
       } else {
         // If this is not the first row, replace the last row with the new one
-        emit(GridState(
-          cells: state.cells.withoutLast + [lastRow],
-          isLost: state.isLost,
-          isWon: state.isWon,
-        ));
+        emit(state.copyWith(cells: state.cells.withoutLast + [lastRow]));
       }
     }
   }
@@ -135,8 +120,27 @@ class GridState {
   final List<List<Cell>> cells;
   final bool isWon;
   final bool isLost;
+  final bool wordDoesntExist;
 
-  GridState({this.isWon = false, this.isLost = false, this.cells = const []});
+  GridState({
+    this.isWon = false,
+    this.isLost = false,
+    this.wordDoesntExist = false,
+    this.cells = const [],
+  });
+
+  GridState copyWith(
+      {List<List<Cell>>? cells,
+      bool? isWon,
+      bool? isLost,
+      bool? wordDoesntExist}) {
+    return GridState(
+      cells: cells ?? this.cells,
+      isWon: isWon ?? this.isWon,
+      isLost: isLost ?? this.isLost,
+      wordDoesntExist: wordDoesntExist ?? false,
+    );
+  }
 
   /// Gets the most recent [CellState] from a given [character].
   CellState getMostRecentStateFromLetter(String character) {
