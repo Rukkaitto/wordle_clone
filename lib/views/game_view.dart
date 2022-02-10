@@ -31,12 +31,17 @@ class GameView extends StatelessWidget {
           centerTitle: true,
           title: const Hero(
             tag: 'title',
-            child: Text(
-              'Wordle',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
+            child: Material(
+              color: Colors.transparent,
+              child: Text(
+                'Wordle',
+                overflow: TextOverflow.visible,
+                softWrap: false,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),

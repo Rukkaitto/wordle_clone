@@ -25,11 +25,16 @@ class _HomeViewState extends State<HomeView> {
           children: [
             const Hero(
               tag: 'title',
-              child: Text(
-                'Wordle',
-                style: TextStyle(
-                  fontSize: 60.0,
-                  fontWeight: FontWeight.bold,
+              child: Material(
+                color: Colors.transparent,
+                child: Text(
+                  'Wordle',
+                  overflow: TextOverflow.visible,
+                  softWrap: false,
+                  style: TextStyle(
+                    fontSize: 60.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
