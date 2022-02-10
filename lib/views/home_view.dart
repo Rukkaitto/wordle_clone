@@ -62,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
           value: language,
           child: Flag.fromString(
             language.name,
-            width: 50,
+            width: 40,
             borderRadius: 15,
           ),
         );
