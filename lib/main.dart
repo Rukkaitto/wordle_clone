@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wordle_clone/views/home.dart';
+import 'package:wordle_clone/views/game_view.dart';
+import 'package:wordle_clone/views/home_view.dart';
 
 void main() {
   runApp(const App());
@@ -12,9 +13,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Wordle',
-      initialRoute: '/',
+      initialRoute: HomeView.routeName,
       routes: {
-        '/': (context) => const Home(),
+        HomeView.routeName: (context) => const HomeView(),
+        GameView.routeName: (context) => const GameView(),
       },
     );
   }

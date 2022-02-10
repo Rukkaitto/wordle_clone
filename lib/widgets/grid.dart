@@ -4,14 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
+import 'package:wordle_clone/util/word_utils.dart';
+import 'package:wordle_clone/views/game_view.dart';
 import 'package:wordle_clone/widgets/cell_widget.dart';
 
 class Grid extends StatelessWidget {
   final String word;
   final int maxAttempts;
+  final Language language;
 
   const Grid({
     required this.word,
+    required this.language,
     this.maxAttempts = 6,
     Key? key,
   }) : super(key: key);
@@ -69,7 +73,10 @@ class Grid extends StatelessWidget {
         title: 'You won!',
         btnOkText: 'Play again',
         btnOkOnPress: () {
-          Navigator.of(context).pushReplacementNamed('/');
+          Navigator.of(context).pushReplacementNamed(
+            GameView.routeName,
+            arguments: GameViewArguments(language),
+          );
         },
       ).show();
     }
@@ -80,7 +87,10 @@ class Grid extends StatelessWidget {
         title: 'You lost... (the word was: ${word.toUpperCase()})',
         btnOkText: 'Play again',
         btnOkOnPress: () {
-          Navigator.of(context).pushReplacementNamed('/');
+          Navigator.of(context).pushReplacementNamed(
+            GameView.routeName,
+            arguments: GameViewArguments(language),
+          );
         },
       ).show();
     }

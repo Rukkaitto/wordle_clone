@@ -1,8 +1,11 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:math';
 import 'package:flutter/services.dart';
 
 enum Language {
-  en,
+  gb,
+  fr,
 }
 
 class WordUtils {
@@ -16,14 +19,14 @@ class WordUtils {
   static Future<List<String>> getWords(
     Language language,
   ) async {
-    return _getWordsFromFile("words_${language.name}.txt");
+    return _getWordsFromFile("allowed_${language.name}.txt");
   }
 
   /// Fetches a list of the most common words in the given language.
   static Future<List<String>> getCommonWords(
     Language language,
   ) async {
-    return _getWordsFromFile("common_nouns_${language.name}.txt");
+    return _getWordsFromFile("guesses_${language.name}.txt");
   }
 
   static Future<List<String>> _getWordsFromFile(

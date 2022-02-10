@@ -7,10 +7,12 @@ import 'package:wordle_clone/util/word_utils.dart';
 class GridCubit extends Cubit<GridState> {
   final String word;
   final int maxAttempts;
+  final Language language;
 
   GridCubit({
     required this.word,
     required this.maxAttempts,
+    required this.language,
   }) : super(GridState());
 
   /// Emits a new [GridState] with evaluated cell states for the last row
@@ -22,7 +24,7 @@ class GridCubit extends Cubit<GridState> {
 
     final solution = lastRow.map((e) => e.character).join();
 
-    if (!await WordUtils.wordExists(solution, Language.en)) {
+    if (!await WordUtils.wordExists(solution, language)) {
       emit(state.copyWith(wordDoesntExist: true));
       return;
     } else {
