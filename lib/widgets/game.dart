@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wordle_clone/classes/keyboard.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
 import 'package:wordle_clone/cubit/language_cubit.dart';
+import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/widgets/grid.dart';
 import 'package:wordle_clone/widgets/keyboard_widget.dart';
-
-import '../util/word_utils.dart';
 
 class Game extends StatelessWidget {
   final String word;
@@ -37,7 +35,7 @@ class Game extends StatelessWidget {
                     child: Grid(word: word),
                   ),
                   const Spacer(),
-                  KeyboardWidget(keyboard: Keyboard.azerty),
+                  KeyboardWidget(keyboard: language.keyboardLayout),
                   const Flexible(
                     child: SizedBox(
                       height: 100.0,

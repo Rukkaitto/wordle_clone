@@ -5,7 +5,7 @@ import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
 import 'package:wordle_clone/cubit/language_cubit.dart';
-import 'package:wordle_clone/util/word_utils.dart';
+import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/views/game_view.dart';
 import 'package:wordle_clone/widgets/cell_widget.dart';
 

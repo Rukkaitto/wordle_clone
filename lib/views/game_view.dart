@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordle_clone/cubit/language_cubit.dart';
+import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/util/word_utils.dart';
 import 'package:wordle_clone/widgets/game.dart';
 

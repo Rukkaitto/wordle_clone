@@ -2,11 +2,7 @@
 
 import 'dart:math';
 import 'package:flutter/services.dart';
-
-enum Language {
-  gb,
-  fr,
-}
+import 'package:wordle_clone/enums/language.dart';
 
 class WordUtils {
   /// Checks if a word exists in the given language

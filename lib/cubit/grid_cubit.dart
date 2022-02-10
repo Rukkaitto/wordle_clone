@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
+import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/extensions/list_extension.dart';
 import 'package:wordle_clone/util/word_utils.dart';
 

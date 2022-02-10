@@ -1,6 +1,6 @@
 import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
-import 'package:wordle_clone/util/word_utils.dart';
+import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/views/game_view.dart';
 
 class HomeView extends StatefulWidget {
