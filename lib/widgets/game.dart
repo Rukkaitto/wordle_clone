@@ -18,35 +18,28 @@ class Game extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageCubit, Language>(
-      builder: (context, language) {
-        return BlocProvider(
-          create: (context) => GridCubit(
-            word: word,
-            maxAttempts: attempts,
-            language: language,
+    final language = context.read<LanguageCubit>().state;
+    return BlocProvider(
+      create: (context) => GridCubit(
+        word: word,
+        maxAttempts: attempts,
+        language: language,
+      ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Grid(word: word),
           ),
-          child: Builder(
-            builder: (context) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Grid(word: word),
-                  ),
-                  const Spacer(),
-                  KeyboardWidget(keyboard: language.keyboardLayout),
-                  const Flexible(
-                    child: SizedBox(
-                      height: 100.0,
-                    ),
-                  ),
-                ],
-              );
-            },
+          const Spacer(),
+          KeyboardWidget(keyboard: language.keyboardLayout),
+          const Flexible(
+            child: SizedBox(
+              height: 100.0,
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:wordle_clone/classes/cell.dart';
 import 'package:wordle_clone/classes/cell_state.dart';
 import 'package:wordle_clone/cubit/grid_cubit.dart';
 import 'package:wordle_clone/cubit/language_cubit.dart';
-import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/views/game_view.dart';
 import 'package:wordle_clone/widgets/cell_widget.dart';
 
@@ -27,14 +26,9 @@ class Grid extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.all(8.0),
-      child: BlocBuilder<LanguageCubit, Language>(
-        builder: (context, language) {
-          return BlocConsumer<GridCubit, GridState>(
-            listener: (context, state) =>
-                gridListener(context, state, language),
-            builder: (context, state) => gridBuilder(context, state),
-          );
-        },
+      child: BlocConsumer<GridCubit, GridState>(
+        listener: (context, state) => gridListener(context, state),
+        builder: (context, state) => gridBuilder(context, state),
       ),
     );
   }
@@ -69,7 +63,8 @@ class Grid extends StatelessWidget {
     );
   }
 
-  void gridListener(BuildContext context, GridState state, Language language) {
+  void gridListener(BuildContext context, GridState state) {
+    final language = context.read<LanguageCubit>().state;
     if (state.isWon) {
       AwesomeDialog(
         context: context,
