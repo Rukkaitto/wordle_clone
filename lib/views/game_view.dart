@@ -24,6 +24,23 @@ class GameView extends StatelessWidget {
     return BlocProvider(
       create: (context) => LanguageCubit(args.language),
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.black),
+          centerTitle: true,
+          title: const Hero(
+            tag: 'title',
+            child: Text(
+              'Wordle',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         body: SafeArea(
           child: FutureBuilder<String>(
             future: WordUtils.getRandomWord(

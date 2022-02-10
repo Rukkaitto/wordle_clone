@@ -23,11 +23,14 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Wordle',
-              style: TextStyle(
-                fontSize: 60.0,
-                fontWeight: FontWeight.bold,
+            const Hero(
+              tag: 'title',
+              child: Text(
+                'Wordle',
+                style: TextStyle(
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             TextButton(
