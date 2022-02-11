@@ -29,19 +29,27 @@ class GameView extends StatelessWidget {
           shadowColor: Colors.transparent,
           iconTheme: const IconThemeData(color: Colors.black),
           centerTitle: true,
-          title: const Hero(
+          title: Hero(
             tag: 'title',
             child: Material(
               color: Colors.transparent,
-              child: Text(
-                'Wordle',
-                overflow: TextOverflow.visible,
-                softWrap: false,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  const Text(
+                    'Wordle',
+                    overflow: TextOverflow.visible,
+                    softWrap: false,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Spacer(),
+                  args.language.flag,
+                ],
               ),
             ),
           ),

@@ -1,4 +1,3 @@
-import 'package:flag/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:wordle_clone/enums/language.dart';
 import 'package:wordle_clone/views/game_view.dart';
@@ -68,11 +67,7 @@ class _HomeViewState extends State<HomeView> {
       items: Language.values.map((Language language) {
         return DropdownMenuItem(
           value: language,
-          child: Flag.fromString(
-            language.name,
-            width: 40,
-            borderRadius: 15,
-          ),
+          child: language.flag,
         );
       }).toList(),
       onChanged: (value) {

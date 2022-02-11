@@ -1,3 +1,4 @@
+import 'package:flag/flag.dart';
 import 'package:wordle_clone/classes/keyboard.dart';
 
 enum Language {
@@ -13,5 +14,13 @@ extension LanguageExtension on Language {
       case Language.fr:
         return Keyboard.azerty;
     }
+  }
+
+  Flag get flag {
+    return Flag.fromString(
+      name,
+      width: 40,
+      borderRadius: 15,
+    );
   }
 }
